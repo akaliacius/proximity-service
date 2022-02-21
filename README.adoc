@@ -1,0 +1,64 @@
+=== Requirements
+* java 17
+* gradle
+
+=== Data structure
+
+It is clear that List is not right choice. Filter list with millions
+shops every request would be long and expensive.
+
+Hashing won't work here either as request location will usually be different
+from the shops. We need calculate proximity, not find exact location.
+
+I created a two-dimensional grid holding coordinates for every corner of the grid in the following
+order North West, North East, South East, South West.
+
+A grid can have four children. Each grid contains information about all the shops in that grid.
+If a node reaches limit of shops, it will break it down to create four child grids
+under it and distribute new shops among them.
+
+This QuadTree might be very deep for places with very high shop density.
+
+=== Request
+
+[source,json]
+----
+{
+  "limit": 10,
+  "location": {
+    "lat": 51.464124,
+    "lon": 0.0286684
+  }
+}
+
+----
+
+=== Response
+
+[source,json]
+----
+{
+  "currentLocation": {
+    "lat": 51.464124,
+    "lon": 0.0286684
+  },
+  "shops": [
+    {
+      "id": "UUID",
+      "name": "super store",
+      "location": {
+        "lat": 51.464124,
+        "lon": 0.0286684
+      }
+    },
+    {
+      "id": "UUID",
+      "name": "super store",
+      "location": {
+        "lat": 51.464124,
+        "lon": 0.0286684
+      }
+    }
+  ]
+}
+----
